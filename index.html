@@ -148,13 +148,14 @@ function stopMainScan(){
 function handleScannedBarcode(code){
   code=String(code).trim(); stopMainScan();
   $('m-search').classList.add('on');$('m-scan').classList.remove('on');$('searchWrap').style.display='block';
-  const itemId=barcodeMap[code];
-  if(itemId){
-    const book=BOOKS.find(b=>String(b.id)===itemId);
-    if(book){q.value='';renderCards([book],code,true);toast('✅ Dikenal: '+book.judul.slice(0,28));return}
+  const book=BOOKS.find(b=>String(b.id)===code);
+  if(book){
+    q.value=''; pendingBarcode=code; renderCards([book],code,true);
+    toast('✅ '+book.judul.slice(0,30));
+  }else{
+    q.value=''; pendingBarcode=code; render();
+    toast('⚠️ ID '+code+' tidak ada di katalog');
   }
-  pendingBarcode=code; q.value=''; q.focus(); render();
-  toast('🆕 Barcode baru — pilih judulnya');
 }
 
 function norm(s){return s.toLowerCase().normalize('NFD').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
