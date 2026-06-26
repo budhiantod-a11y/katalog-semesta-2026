@@ -63,6 +63,9 @@ header p{font-size:12px;color:#8a8278;margin-top:3px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#2d2a26;color:#fff;padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;transition:transform .3s;z-index:100;box-shadow:0 6px 20px rgba(0,0,0,.2)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .footer{text-align:center;font-size:11px;color:#c4baac;padding:24px 0 0}
+.manualcalc{background:#fff;border:1.5px dashed #e0d6c6;border-radius:14px;padding:16px;margin-top:18px}
+.mc-title{font-size:14px;font-weight:700;margin-bottom:12px}
+.mc-title span{font-size:11px;font-weight:500;color:#9a9082;display:block;margin-top:2px}
 </style>
 </head>
 <body>
@@ -93,6 +96,16 @@ header p{font-size:12px;color:#8a8278;margin-top:3px}
 
 <div class="count" id="count"></div>
 <div id="list"></div>
+
+<div class="manualcalc">
+<div class="mc-title">🧮 Kalkulator Manual <span>buku tidak ada di katalog</span></div>
+<div class="crow"><label>Harga Normal</label><div class="rp"><span>Rp</span>
+  <input type="number" inputmode="numeric" placeholder="0" id="mc-harga"></div></div>
+<div class="crow"><label>Diskon</label><div class="rp" style="padding-left:0">
+  <input type="number" inputmode="numeric" placeholder="0" id="mc-diskon" style="padding-left:12px"><span style="left:auto;right:12px">%</span></div></div>
+<div class="result" id="mc-res"></div>
+</div>
+
 <div class="footer">1674 judul di katalog</div>
 </div>
 <div class="toast" id="toast"></div>
@@ -246,6 +259,21 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');cle
 
 q.oninput=()=>{pendingBarcode='';render()};
 clearBtn.onclick=()=>{q.value='';pendingBarcode='';q.focus();render()};
+
+function mcHitung(){
+  const harga=parseFloat($('mc-harga').value)||0;
+  const d=parseFloat($('mc-diskon').value)||0;
+  const res=$('mc-res');
+  if(harga<=0){res.classList.remove('show');return}
+  const potong=harga*d/100, akhir=harga-potong;
+  res.innerHTML=`<div class="line"><span>Harga normal</span><span class="strike">${fmt(harga)}</span></div>
+    <div class="line"><span>Diskon ${d}%</span><span class="save">- ${fmt(potong)}</span></div>
+    <div class="line final"><span>Harga final</span><span>${fmt(akhir)}</span></div>`;
+  res.classList.add('show');
+}
+$('mc-harga').oninput=mcHitung;
+$('mc-diskon').oninput=mcHitung;
+
 render();
 </script>
 </body>
