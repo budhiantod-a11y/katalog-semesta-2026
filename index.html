@@ -90,7 +90,7 @@ header p{font-size:12px;color:#8a8278;margin-top:3px}
 <div class="scan-hint" id="scanHint">Arahkan kamera ke barcode buku…</div>
 
 <div class="search-box" id="searchWrap">
-<input id="q" type="text" placeholder="Cari judul buku..." autocomplete="off">
+<input id="q" type="text" placeholder="Cari judul atau ItemID..." autocomplete="off">
 <button class="clear" id="clear">&times;</button>
 </div>
 
@@ -178,7 +178,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 function render(){
   const words=norm(q.value).split(' ').filter(Boolean);
   let res=BOOKS;
-  if(words.length)res=res.filter(b=>{const t=norm(b.judul);return words.every(w=>t.includes(w))});
+  if(words.length)res=res.filter(b=>{const t=norm(b.judul)+' '+String(b.id);return words.every(w=>t.includes(w))});
   res=res.slice().sort((a,b)=>b.diskon-a.diskon);
   clearBtn.style.display=q.value?'block':'none';
   if(!q.value){countEl.textContent='';list.innerHTML='<div class="empty"><div class="big">👆</div><p>Ketik judul buku untuk mulai</p></div>';return}
